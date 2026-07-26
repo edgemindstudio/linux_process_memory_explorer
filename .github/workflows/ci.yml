@@ -1,0 +1,112 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: ${{ matrix.preset }}
+    runs-on: ubuntu-24.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        preset:
+          - debug-clang
+          - release-clang
+          - debug-gcc
+          - release-gcc
+          - sanitize-clang
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes \
+            clang \
+            cmake \
+            g++ \
+            ninja-build
+
+      - name: Configure
+        run: cmake --preset "${{ matrix.preset }}"
+
+      - name: Build
+        run: cmake --build --preset "${{ matrix.preset }}"
+
+      - name: Test
+        run: ctest --preset "${{ matrix.preset }}"
+
+      - name: Run CLI
+        run: "./build/${{ matrix.preset }}/proclens"
+
+  static-analysis:
+    name: Static analysis
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install analysis tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes \
+            clang \
+            clang-tidy \
+            cmake \
+            cppcheck \
+            ninja-build
+
+      - name: Configure
+        run: cmake --preset analyze-clang
+
+      - name: Build with analyzers
+        run: cmake --build --preset analyze-clang
+
+      - name: Test
+        run: ctest --preset analyze-clang
+
+  formatting:
+    name: Formatting
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install clang-format
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes clang-format
+
+      - name: Verify C++ formatting
+        run: |
+          mapfile -d '' files < <(
+            find include src tests tools \
+              -type f \
+              \( -name '*.cpp' -o -name '*.hpp' \) \
+              -print0 |
+            sort -z
+          )
+
+          if [[ ${#files[@]} -eq 0 ]]; then
+            echo "No C++ files found"
+            exit 1
+          fi
+
+          clang-format --dry-run --Werror "${files[@]}"

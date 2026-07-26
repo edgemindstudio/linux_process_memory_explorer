@@ -1,0 +1,72 @@
+# CMake build trees
+/build/
+/build-*/
+/cmake-build-*/
+
+# CMake-generated files
+CMakeCache.txt
+CMakeFiles/
+CTestTestfile.cmake
+cmake_install.cmake
+compile_commands.json
+Testing/
+_deps/
+
+# Ninja-generated files
+.ninja_deps
+.ninja_log
+build.ninja
+rules.ninja
+
+# Compiled binaries and libraries
+*.a
+*.so
+*.so.*
+*.o
+*.obj
+*.out
+*.exe
+
+# Test and coverage artifacts
+*.gcda
+*.gcno
+*.gcov
+coverage/
+coverage.xml
+test-results/
+
+# Sanitizer and profiler output
+asan.*
+lsan.*
+tsan.*
+ubsan.*
+vgcore.*
+perf.data
+perf.data.old
+
+# Debugger files
+.gdb_history
+.lldb_history
+
+# Editor and IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Generated ProcLens artifacts
+generated/
+artifacts/
+snapshots/generated/
+fixtures/captured/
+
+# Package output
+dist/
+packages/
+
+# Temporary files
+*.tmp
+*.temp
+*.log

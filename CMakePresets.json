@@ -1,0 +1,180 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 25,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "PROCLENS_BUILD_TESTS": "ON"
+      }
+    },
+    {
+      "name": "debug-clang",
+      "displayName": "Debug Clang",
+      "description": "Debug build using Clang",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_COMPILER": "clang++",
+        "PROCLENS_WARNINGS_AS_ERRORS": "OFF"
+      }
+    },
+    {
+      "name": "release-clang",
+      "displayName": "Release Clang",
+      "description": "Release build using Clang",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_CXX_COMPILER": "clang++",
+        "PROCLENS_WARNINGS_AS_ERRORS": "ON"
+      }
+    },
+    {
+      "name": "debug-gcc",
+      "displayName": "Debug GCC",
+      "description": "Debug build using GCC",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_COMPILER": "g++",
+        "PROCLENS_WARNINGS_AS_ERRORS": "OFF"
+      }
+    },
+    {
+      "name": "release-gcc",
+      "displayName": "Release GCC",
+      "description": "Release build using GCC",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_CXX_COMPILER": "g++",
+        "PROCLENS_WARNINGS_AS_ERRORS": "ON"
+      }
+    },
+    {
+      "name": "sanitize-clang",
+      "displayName": "Clang ASan and UBSan",
+      "description": "Debug Clang build with AddressSanitizer and UndefinedBehaviorSanitizer",
+      "inherits": "debug-clang",
+      "cacheVariables": {
+        "PROCLENS_ENABLE_ADDRESS_SANITIZER": "ON",
+        "PROCLENS_ENABLE_UNDEFINED_SANITIZER": "ON",
+        "PROCLENS_ENABLE_THREAD_SANITIZER": "OFF",
+        "PROCLENS_WARNINGS_AS_ERRORS": "ON"
+      }
+    },
+    {
+      "name": "thread-sanitize-clang",
+      "displayName": "Clang ThreadSanitizer",
+      "description": "Debug Clang build with ThreadSanitizer",
+      "inherits": "debug-clang",
+      "cacheVariables": {
+        "PROCLENS_ENABLE_ADDRESS_SANITIZER": "OFF",
+        "PROCLENS_ENABLE_UNDEFINED_SANITIZER": "OFF",
+        "PROCLENS_ENABLE_THREAD_SANITIZER": "ON",
+        "PROCLENS_WARNINGS_AS_ERRORS": "ON"
+      }
+    },
+    {
+      "name": "analyze-clang",
+      "displayName": "Clang Static Analysis",
+      "description": "Debug Clang build with clang-tidy and Cppcheck",
+      "inherits": "debug-clang",
+      "cacheVariables": {
+        "PROCLENS_ENABLE_CLANG_TIDY": "ON",
+        "PROCLENS_ENABLE_CPPCHECK": "ON",
+        "PROCLENS_WARNINGS_AS_ERRORS": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "debug-clang",
+      "configurePreset": "debug-clang"
+    },
+    {
+      "name": "release-clang",
+      "configurePreset": "release-clang"
+    },
+    {
+      "name": "debug-gcc",
+      "configurePreset": "debug-gcc"
+    },
+    {
+      "name": "release-gcc",
+      "configurePreset": "release-gcc"
+    },
+    {
+      "name": "sanitize-clang",
+      "configurePreset": "sanitize-clang"
+    },
+    {
+      "name": "thread-sanitize-clang",
+      "configurePreset": "thread-sanitize-clang"
+    },
+    {
+      "name": "analyze-clang",
+      "configurePreset": "analyze-clang"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "debug-clang",
+      "configurePreset": "debug-clang",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "release-clang",
+      "configurePreset": "release-clang",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "debug-gcc",
+      "configurePreset": "debug-gcc",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "release-gcc",
+      "configurePreset": "release-gcc",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "sanitize-clang",
+      "configurePreset": "sanitize-clang",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "thread-sanitize-clang",
+      "configurePreset": "thread-sanitize-clang",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "analyze-clang",
+      "configurePreset": "analyze-clang",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ]
+}
